@@ -1,5 +1,7 @@
 from datetime import date, timedelta
 import os
+
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import datetime
 from django.utils import timezone
@@ -485,7 +487,7 @@ def user_pic_upload_to(instance, filename):
     return f'member/{instance.user_stu}/{filename}'
 
 
-class User(models.Model):
+class User(AbstractUser):
     user_stu = models.IntegerField(db_column='USER_STU', primary_key=True)
     user_name = models.CharField(db_column='USER_NAME', max_length=50)
     user_major = models.ForeignKey(MajorInfo, models.DO_NOTHING, db_column='USER_MAJOR', null=True)

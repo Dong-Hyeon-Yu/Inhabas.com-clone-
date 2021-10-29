@@ -53,7 +53,7 @@ class UpdateBoardInteractor(BoardInteractor):
         return self
 
     def execute(self):
-        self.db.update_board(self.pk, self.title, self.content, self.fix)
+        return self.db.update_board(self.pk, self.title, self.content, self.fix)
 
 
 class DeleteBoardInteractor(BoardInteractor):
@@ -63,7 +63,15 @@ class DeleteBoardInteractor(BoardInteractor):
         return self
 
     def execute(self):
-        self.db.delete_board(pk=self.pk)
+        return self.db.delete_board(pk=self.pk)
 
 
+class GetBoardListInteractor(BoardInteractor):
+    def set_params(self, type: str):
+        self.type = type
+
+        return self
+
+    def execute(self):
+        return self.db.get_board_list(type=self.type)
 
