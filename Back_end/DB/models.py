@@ -8,6 +8,9 @@
 from abc import abstractmethod
 from datetime import date, timedelta
 import os
+
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import datetime
 from django.utils import timezone
@@ -494,8 +497,8 @@ def user_pic_upload_to(instance, filename):
     return f'member/{instance.user_stu}/{filename}'
 
 
-class User(models.Model):
-    user_stu = models.IntegerField(db_column='USER_STU', primary_key=True)
+class User(AbstractBaseUser):
+    user_stu = models.IntegerField(db_column='USER_STU', primary_key=True, unique=True)
     user_name = models.CharField(db_column='USER_NAME', max_length=50)
     user_major = models.ForeignKey(MajorInfo, models.DO_NOTHING, db_column='USER_MAJOR', null=True)
     user_pic = models.ImageField(db_column='USER_PIC', upload_to=user_pic_upload_to, blank=True, null=True)
@@ -507,6 +510,8 @@ class User(models.Model):
     user_phone = models.CharField(db_column='USER_PHONE', unique=True, max_length=15)
     user_intro = models.CharField(db_column="USER_INTRO", null=True, max_length=300)
     user_apply_publish = models.IntegerField(db_column="USER_APPLY_PUBLISH", null=True, default=0)
+    USERNAME_FIELD = "user_name"
+    EMAIL_FIELD = "useremail"
 
     class Meta:
         managed = False
@@ -515,6 +520,7 @@ class User(models.Model):
     @property
     def get_file_path(self):
         return os.path.join(MEDIA_ROOT, "member", str(self.user_stu))
+
 
 
 class UserAuth(models.Model):
@@ -642,7 +648,7 @@ class AccountEmailaddress(models.Model):
     email = models.CharField(unique=True, max_length=254)
     verified = models.IntegerField()
     primary = models.IntegerField()
-    user = models.ForeignKey('AuthUser', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
 
     class Meta:
         managed = False
@@ -707,7 +713,7 @@ class AuthUser(models.Model):
 
 
 class AuthUserGroups(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
 
     class Meta:
@@ -717,7 +723,7 @@ class AuthUserGroups(models.Model):
 
 
 class AuthUserUserPermissions(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING)
     permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
 
     class Meta:
@@ -733,7 +739,7 @@ class DjangoAdminLog(models.Model):
     action_flag = models.PositiveSmallIntegerField()
     change_message = models.TextField()
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -793,7 +799,7 @@ class SocialaccountSocialaccount(models.Model):
     last_login = models.DateTimeField()
     date_joined = models.DateTimeField()
     extra_data = models.TextField()
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING)
 
     class Meta:
         managed = False

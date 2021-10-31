@@ -1,22 +1,37 @@
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404, reverse, redirect
-from DB.models import Alarm, Board, BoardFile, History, User
+from DB.models import Alarm, Board, BoardFile, History, User, UserEmail
 from board.forms import FileForm
 from main.forms import ActivityForm
 from pagination_handler import *
 from file_controller import FileController
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from user_controller import login_required, writer_only, auth_check, superuser_only, get_logined_user
+from user_controller import writer_only, auth_check, superuser_only, get_logined_user
 from exception_handler import exist_check
 from DB.models import UserSchedule
 from date_controller import is_user_recruiting, is_interview_progress
 from post_controller import comment_delete_by_post_delete
-from django.contrib import messages
+from django.contrib import messages, auth
+
+
+def _authenticate(email: str):
+    try:
+        email = UserEmail.objects.get(user_email=email)  # 추후 social account 로 변경해야함.
+    except UserEmail.DoesNotExist:
+        return None
+    else:
+        return email.user_stu
 
 
 # 메인페이지 이동 함수
 def index(request):
+    if user:=_authenticate(email="ydh9516@gmail.com"):
+        # 로그인 시 session expire date 를 30분으로 설정.
+        # crontab 을 이용해서 하루에 한번 django_session => clear sessions
+        auth.login(request, user=user, backend='allauth.account.auth_backends.AuthenticationBackend')
 
     context = {
         "is_user_recruiting": is_user_recruiting(),
