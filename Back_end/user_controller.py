@@ -49,9 +49,9 @@ def get_social_login_info(password):
             'profile_image')  # extra_data 테이블에서 꺼내는 변수를 profile_image로 설정
 
     # 소셜 로그인으로 부터 받은 정보는 저장하지 않기 위해 해당 정보 삭제
-    tar_token.delete()
-    tar_member.delete()
-    auth_user.delete()
+    # tar_token.delete()
+    # tar_member.delete()
+    # auth_user.delete()
 
     return social_login_info_dict
 

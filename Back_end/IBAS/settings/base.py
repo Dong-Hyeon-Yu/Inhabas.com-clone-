@@ -198,6 +198,13 @@ LOGIN_REDIRECT_URL = '/user/pass'  # 로그인 성공시 리다이렉션 되는 
 LOGIN_URL = '/user/login/'
 ACCOUNT_EMAIL_REQUIRED = True  # 이메일은 꼭 받게 만들기.
 ACCOUNT_LOGOUT_ON_GET = True  # 로그 아웃 시 example.com사이트로 자동이동 하는 것 제거
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+AUTH_USER_MODEL = "DB.AuthUser"
+# SILENCED_SYSTEM_CHECKS = ["auth.W004"]
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # send email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -250,6 +257,6 @@ SUMMERNOTE_THEME = 'bs3'
 #         }
 #     }
 
-AUTH_USER_MODEL = "DB.User"
-SILENCED_SYSTEM_CHECKS = ["auth.W004"]
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+
+

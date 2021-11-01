@@ -497,7 +497,8 @@ def user_pic_upload_to(instance, filename):
     return f'member/{instance.user_stu}/{filename}'
 
 
-class User(AbstractBaseUser):
+#AbstractBaseUser
+class User(models.Model):
     user_stu = models.IntegerField(db_column='USER_STU', primary_key=True, unique=True)
     user_name = models.CharField(db_column='USER_NAME', max_length=50)
     user_major = models.ForeignKey(MajorInfo, models.DO_NOTHING, db_column='USER_MAJOR', null=True)
@@ -510,8 +511,9 @@ class User(AbstractBaseUser):
     user_phone = models.CharField(db_column='USER_PHONE', unique=True, max_length=15)
     user_intro = models.CharField(db_column="USER_INTRO", null=True, max_length=300)
     user_apply_publish = models.IntegerField(db_column="USER_APPLY_PUBLISH", null=True, default=0)
-    USERNAME_FIELD = "user_name"
-    EMAIL_FIELD = "useremail"
+    # email = models.CharField(db_column='email', max_length=150)
+    # USERNAME_FIELD = "user_name"
+    # EMAIL_FIELD = "email"
 
     class Meta:
         managed = False
@@ -520,7 +522,6 @@ class User(AbstractBaseUser):
     @property
     def get_file_path(self):
         return os.path.join(MEDIA_ROOT, "member", str(self.user_stu))
-
 
 
 class UserAuth(models.Model):
@@ -648,7 +649,7 @@ class AccountEmailaddress(models.Model):
     email = models.CharField(unique=True, max_length=254)
     verified = models.IntegerField()
     primary = models.IntegerField()
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey('AuthUser', on_delete=models.CASCADE)
 
     class Meta:
         managed = False
@@ -695,17 +696,8 @@ class AuthPermission(models.Model):
         unique_together = (('content_type', 'codename'),)
 
 
-class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.IntegerField()
-    username = models.CharField(unique=True, max_length=100)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.CharField(max_length=200)
-    is_staff = models.IntegerField()
-    is_active = models.IntegerField()
-    date_joined = models.DateTimeField()
+class AuthUser(AbstractUser):
+    student_id = models.IntegerField(db_column='student_id')  # 언젠가는 unique 로 설정해야함.
 
     class Meta:
         managed = False
@@ -713,7 +705,7 @@ class AuthUser(models.Model):
 
 
 class AuthUserGroups(models.Model):
-    user = models.ForeignKey(User, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
 
     class Meta:
@@ -723,7 +715,7 @@ class AuthUserGroups(models.Model):
 
 
 class AuthUserUserPermissions(models.Model):
-    user = models.ForeignKey(User, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
 
     class Meta:

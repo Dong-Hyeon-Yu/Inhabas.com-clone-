@@ -17,21 +17,8 @@ from post_controller import comment_delete_by_post_delete
 from django.contrib import messages, auth
 
 
-def _authenticate(email: str):
-    try:
-        email = UserEmail.objects.get(user_email=email)  # 추후 social account 로 변경해야함.
-    except UserEmail.DoesNotExist:
-        return None
-    else:
-        return email.user_stu
-
-
 # 메인페이지 이동 함수
 def index(request):
-    if user:=_authenticate(email="ydh9516@gmail.com"):
-        # 로그인 시 session expire date 를 30분으로 설정.
-        # crontab 을 이용해서 하루에 한번 django_session => clear sessions
-        auth.login(request, user=user, backend='allauth.account.auth_backends.AuthenticationBackend')
 
     context = {
         "is_user_recruiting": is_user_recruiting(),
