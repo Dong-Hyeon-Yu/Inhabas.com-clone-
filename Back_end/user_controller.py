@@ -2,9 +2,10 @@ import functools
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import redirect, reverse, render
-from DB.models import User, ContestBoard, Board, Bank, Lect, UserDelete, AuthUser, History, LectEnrollment, \
+from DB.models import User, ContestBoard, Board, Bank, Lect, UserDelete, History, LectEnrollment, \
     LectBoard, Answer, UserEmail, Comment, LectAssignmentSubmit, Alarm, PolicyTerms, LectAttendance
 from allauth.socialaccount.models import SocialAccount, SocialToken
+from permission.models import AuthUser
 from file_controller import FileController
 from django.db.models import Q
 from django.db import transaction

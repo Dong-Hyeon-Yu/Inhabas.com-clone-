@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'lecture',
     # 덧글 관련 앱
     'comment',
+    # 권한 관련 앱
+    'permission',
     # widget_tweaks
     'widget_tweaks',
     # 템플릿에서 산술연산을 하기 위한 앱
@@ -182,9 +184,10 @@ STATICFILES_STORAGE = 'IBAS.storage.StaticFilesMd5HashingStorage'
 # social 로그인 패키지 설정
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
-    #'django.contrib.auth.backends.ModelBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
+    'permission.backends.IBASBackend',
 )
 
 # 미디어 파일을 관리할 루트 media 디렉터리
@@ -202,7 +205,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-AUTH_USER_MODEL = "DB.AuthUser"
+AUTH_USER_MODEL = "permission.AuthUser"
 # SILENCED_SYSTEM_CHECKS = ["auth.W004"]
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
