@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import permission_required
 from django.db import transaction
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from DB.models import Board, BoardFile, BoardType, ContestBoard, ContestFile
@@ -129,6 +130,7 @@ def get_context_of_contest_(contest_no):
 # 작성자 : 양태영
 # 마지막 수정 일시 :
 @login_required
+@permission_required('board.view_board', raise_exception=True)
 def board_view(request, board_type_no):  # 게시판 페이지로 이동
     cur_user = get_logined_user(request)
     board_fixed_list = Board.objects.filter(

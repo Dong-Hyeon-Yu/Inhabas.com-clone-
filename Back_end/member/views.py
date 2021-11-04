@@ -190,7 +190,10 @@ def pass_param(request):  # 구글 로그인으로 부터 파라미터를 받아
     # 소셜로그인 성공 && 기존 회원일 때
     if request.user and (exist_email := UserEmail.objects.filter(user_email=request.user.email)):
         if not request.user.student_id:
-            request.user.student_id = exist_email.first().user_stu_id
+            exist_user = exist_email.first().user_stu
+            request.user.student_id = exist_user.user_stu
+            request.user.username = exist_user.user_name
+            request.user.first_name, request.user.last_name = exist_user.user_name[0], exist_user.user_name[1:]
             request.user.save()
 
     list(messages.get_messages(request))  # django allauth 에서 발생시키는 메세지 retrieve
