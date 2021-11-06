@@ -1,6 +1,6 @@
 from datetime import datetime
 from DB.models import Board
-from entity import BoardEntity
+from board.dto import BoardDTO
 
 board_type = {
         'notice':       1,
@@ -15,12 +15,25 @@ board_type = {
     }
 
 
-class BoardDatabase(object):
+class BoardDAO(object):
+    """
+    Data Access Object For Board. (DAO)
+    This object can access database(board table) using Django ORM.
+    when get a board data, this object returns a board DTO not a QuerySet nor a ORM.
+    So be careful that using a DAO prevents from using django ORM features directly!
+    (ex, related query set, prefetched related set, etc)
+
+    Do not allow db-access-things include django-query outside but here.
+    """
     def __init__(self):
+        """
+        If there are many databases, recommend to make many DAO classes according to each databases.
+        This Data Access Object is base on default database.
+        """
         super()
 
-    def _decode_orm_board(self, orm_board) -> BoardEntity:
-        return BoardEntity(
+    def _decode_orm_board(self, orm_board) -> BoardDTO:
+        return BoardDTO(
             pk=orm_board.pk,
             title=orm_board.board_title,
             writer=orm_board.board_writer_id,
@@ -46,7 +59,7 @@ class BoardDatabase(object):
 
         return type_no
 
-    def get_board(self, pk: int) -> BoardEntity:
+    def get_board(self, pk: int) -> BoardDTO:
         orm_board = self._get_orm_board(pk)
 
         return self._decode_orm_board(orm_board)
@@ -56,7 +69,7 @@ class BoardDatabase(object):
 
         orm_board.delete()
 
-    def create_board(self, title: str, writer: int, content: str, type: str, fix: datetime) -> BoardEntity:
+    def create_board(self, title: str, writer: int, content: str, type: str, fix: datetime) -> BoardDTO:
         type_no = self._get_type_no(type=type)
 
         orm_board = Board.objects.create(
@@ -71,7 +84,7 @@ class BoardDatabase(object):
         orm_board.board_fixdate = fix
         orm_board.save()
 
-    def get_board_list(self, type: str) -> [BoardEntity, ]:
+    def get_board_list(self, type: str) -> [BoardDTO, ]:
         type_no = self._get_type_no(type=type)
 
         return [self._decode_orm_board(orm_board) for orm_board in Board.objects.filter(board_type_no_id=type_no).all()]

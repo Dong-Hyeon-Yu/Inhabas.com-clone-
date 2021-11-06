@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from board import urls_example
 
 urlpatterns = [
     path('<int:board_type_no>', views.board_view, name="board_view"),  # 게시판페이지로 이동
@@ -18,4 +19,4 @@ urlpatterns = [
     path('contest/update/<int:contest_no>', views.contest_update, name="contest_update"),
     path('contest/search/', views.contest_search, name="contest_search"),
 
-]
+] + urls_example.urlpatterns
