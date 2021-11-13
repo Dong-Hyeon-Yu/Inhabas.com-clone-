@@ -188,7 +188,7 @@ def quest_chk(request):
 
 def pass_param(request):  # 구글 로그인으로 부터 파라미터를 받아 넘기는 페이지, 사용자에겐 보이지 않음.
     # 소셜로그인 성공 && 기존 회원일 때
-    if request.user and (exist_email := UserEmail.objects.filter(user_email=request.user.email)):
+    if request.user.is_authenticated and (exist_email := UserEmail.objects.filter(user_email=request.user.email)):
         if not request.user.student_id:
             exist_user = exist_email.first().user_stu
             request.user.student_id = exist_user.user_stu
