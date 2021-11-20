@@ -5,9 +5,6 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from rest_framework.decorators import api_view
 from board.factory import NoticeBoardListControllerFactory
-from board.controller import NoticeBoardListController
-from board.dao import BoardDAO
-from board.serviceImpl import GetBoardListServiceImpl
 
 
 @api_view(['GET'])

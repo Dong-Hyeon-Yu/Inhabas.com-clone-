@@ -1,3 +1,4 @@
+from typing import List
 from board.dto import BoardDTO
 
 
@@ -17,5 +18,5 @@ class BoardSerializer:
         }
 
     @staticmethod
-    def serialize_all(board_list: [BoardDTO, ]):
+    def serialize_all(board_list: List[BoardDTO]):
         return [BoardSerializer.serialize(board) for board in board_list]
